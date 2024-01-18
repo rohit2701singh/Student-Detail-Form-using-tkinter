@@ -21,11 +21,17 @@ def submit_application():
             "email_id": [email_entry.get()],
             "city_name": [city_entry.get()],
         }
+        try:
+            df = pandas.read_csv("candidate_data.csv")
+        except (FileNotFoundError, pandas.errors.EmptyDataError):
+            df = pandas.DataFrame(columns=['name', 'guardian_name', 'gender', 'course', 'phone_no', 'email_id', 'city_name'])
+            df.to_csv("candidate_data.csv", index=False)
 
         applicant_data = pandas.DataFrame(application)
         applicant_data.to_csv("candidate_data.csv", index=False, mode="a", header=False)
 
         name_entry.delete(0, END)
+        name_entry.focus()
         guardian_entry.delete(0, END)
         course_state.set("select category")
         gender_state.set(0)  # Set the value to 0 to deselect all Radiobutton
@@ -62,6 +68,7 @@ contact_label.grid(pady=8, column=0, row=6, columnspan=2, sticky="W")
 
 # creating entry widget
 name_entry = Entry(font=DATA_FONT, width=35)
+name_entry.focus()
 name_entry.grid(column=1, row=2, columnspan=2)
 
 guardian_entry = Entry(font=DATA_FONT, width=35)
